@@ -1,0 +1,50 @@
+nexus:
+  imageName: sonatype/nexus3
+  imageTag: 3.21.2
+  resources:
+    requests:
+      cpu: 1000m
+      memory: 1Gi
+    limits:
+      cpu: 4000m
+      memory: 8Gi
+  service:
+    type: ClusterIP
+nexusProxy:
+   enabled: false
+nexusBackup:
+  persistence:
+    enabled: false
+service:
+  enabled: true
+  name: nexus-docker
+  portName: docker-http
+  port: 5000
+  targetPort: 5000
+persistence:
+  storageClass: managed-premium-retain
+ingress:
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: nexus
+    nginx.ingress.kubernetes.io/proxy-body-size: "0"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+  rules:
+    - host: nexus.ddns.net
+      http:
+        paths:
+        - path: /
+          backend:
+            serviceName: nexus-sonatype-nexus
+            servicePort: 8081
+        - path: /v2/
+          backend:
+            serviceName: nexus-docker
+            servicePort: 5000
+    - host: docker-proxy.nexus.ddns.net
+      http:
+        paths:
+        - path: /
+          backend:
+            serviceName: nexus-docker-proxy
+            servicePort: 5001

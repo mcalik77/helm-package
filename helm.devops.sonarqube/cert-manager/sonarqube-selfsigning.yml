@@ -1,0 +1,22 @@
+apiVersion: cert-manager.io/v1alpha2
+kind: Issuer
+metadata:
+  name: selfsigning-issuer
+  namespace: sonarqube
+spec:
+  selfSigned: {}
+---
+apiVersion: cert-manager.io/v1alpha2
+kind: Certificate
+metadata:
+  name: sonarqube-tls
+  namespace: sonarqube
+spec:
+  secretName: sonarqube-tls
+  isCA: true
+  issuerRef:
+    name: selfsigning-issuer
+    kind: Issuer
+  commonName: sonarqube.ddns.net
+  dnsNames:
+    - sonarqube.ddns.net

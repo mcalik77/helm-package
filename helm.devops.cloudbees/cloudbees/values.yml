@@ -1,0 +1,23 @@
+OperationsCenter:
+  Annotations:
+    cluster-autoscaler.kubernetes.io/safe-to-evict: "false"
+  Platform: aks
+  HostName: cloudbees.ddns.net
+  Ingress:
+    Class: cloudbees
+    Annotations:
+      nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    tls:
+      Enable: true
+      SecretName: cloudbees-tls
+      Host: cloudbees.ddns.net
+  Cpu: 2000m
+  Memory: 4Gi
+Persistence:
+  StorageClass: managed-premium-retain
+rbac:
+  install: true
+  installCluster: true
+  serviceAccountName: cloudbees-core
+PodSecurityPolicy:
+  Enabled: true

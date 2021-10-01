@@ -1,0 +1,29 @@
+apiVersion: cert-manager.io/v1alpha2
+kind: Issuer
+metadata:
+  name: lets-encrypt-prod-issuer
+  namespace: cloudbees-core
+spec:
+  acme:
+    server: https://acme-v02.api.letsencrypt.org/directory
+    email: "massimo.cannavo@azblue.com"
+    privateKeySecretRef:
+      name: letsencrypt-prod
+    solvers:
+      - http01:
+          ingress:
+            class: cloudbees
+---
+apiVersion: cert-manager.io/v1alpha2
+kind: Certificate
+metadata:
+  name: cloudbees-tls
+  namespace: cloudbees-core
+spec:
+  secretName: cloudbees-tls
+  issuerRef:
+    name: lets-encrypt-prod-issuer
+    kind: Issuer
+  commonName: cloudbees.ddns.net
+  dnsNames:
+    - cloudbees.ddns.net

@@ -1,0 +1,72 @@
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: deny-all
+  namespace: default
+spec:
+  podSelector: {}
+  ingress: []
+---
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: deny-all
+  namespace: kube-system
+spec:
+  podSelector: {}
+  ingress: []
+---
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: kube-dns
+  namespace: kube-system
+spec:
+  podSelector:
+    matchLabels:
+      k8s-app: kube-dns
+  ingress:
+  - from:
+    - ipBlock:
+        cidr: 10.240.0.0/16
+    ports:
+      - port: 53
+        protocol: TCP
+      - port: 53
+        protocol: UDP
+---
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: metrics-server
+  namespace: kube-system
+spec:
+  podSelector:
+    matchLabels:
+      k8s-app: metrics-server
+  ingress:
+  - from:
+    - ipBlock:
+        cidr: 10.240.0.0/16
+    ports:
+      - port: 443
+        protocol: TCP
+---
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: kube-proxy
+  namespace: kube-system
+spec:
+  podSelector:
+    matchLabels:
+      component: kube-proxy
+  ingress:
+  - from:
+    - ipBlock:
+        cidr: 10.240.0.0/16
+    ports:
+      - port: 10250
+        protocol: TCP
+      - port: 10256
+        protocol: TCP

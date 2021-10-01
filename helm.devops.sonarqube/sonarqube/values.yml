@@ -1,0 +1,44 @@
+image:
+  tag: 8.2-enterprise
+ingress:
+  enabled: true
+  hosts:
+    - name: sonarqube.ddns.net
+  annotations:
+    kubernetes.io/ingress.class: sonarqube
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+  tls:
+    - secretName: sonarqube-tls
+      hosts:
+        - sonarqube.ddns.net
+resources:
+  requests:
+    cpu: 2000m
+    memory: 2Gi
+  limits:
+    cpu: 4000m
+    memory: 8Gi
+serviceAccount:
+  create: true
+  name: sonarqube
+persistence:
+  enabled: true
+  storageClass: managed-premium-retain
+elasticsearch:
+  configureNode: false
+postgresql:
+  persistence:
+    storageClass: managed-premium-retain
+  resources:
+    limits:
+      cpu: 2000m
+      memory: 2Gi
+  serviceAccount:
+    enabled: true
+    name: sonarqube-postgresql
+  volumePermissions:
+    securityContext:
+      runAsUser: 1001
+  shmVolume:
+    chmod:
+      enabled: false

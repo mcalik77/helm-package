@@ -1,0 +1,15 @@
+OperationsCenter:
+  Enabled: false
+Master:
+  Enabled: true
+  OperationsCenterNamespace: cloudbees-core
+Agents:
+  Enabled: true
+Persistence:
+  StorageClass: managed-premium-retain
+rbac:
+  install: true
+  installCluster: true
+  serviceAccountName: cloudbees-core
+PodSecurityPolicy:
+  Enabled: true

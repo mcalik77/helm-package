@@ -1,0 +1,22 @@
+apiVersion: cert-manager.io/v1alpha2
+kind: Issuer
+metadata:
+  name: selfsigning-issuer
+  namespace: cloudbees-core
+spec:
+  selfSigned: {}
+---
+apiVersion: cert-manager.io/v1alpha2
+kind: Certificate
+metadata:
+  name: cloudbees-tls
+  namespace: cloudbees-core
+spec:
+  secretName: cloudbees-tls
+  isCA: true
+  issuerRef:
+    name: selfsigning-issuer
+    kind: Issuer
+  commonName: cloudbees.ddns.net
+  dnsNames:
+    - cloudbees.ddns.net

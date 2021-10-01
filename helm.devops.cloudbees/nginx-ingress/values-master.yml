@@ -1,0 +1,27 @@
+rbac:
+  create: true
+controller:
+  ingressClass: cloudbees-master
+  service:
+    externalTrafficPolicy: Local
+  scope:
+    enabled: true
+    namespace: cloudbees-master
+  resources:
+    limits:
+      cpu: 100m
+      memory: 128Mi
+  tcp:
+    configMapNamespace: cloudbees-master
+defaultBackend:
+  resources:
+    limits:
+      cpu: 10m
+      memory: 20Mi
+podSecurityPolicy:
+  enabled: true
+serviceAccount:
+  create: true
+  name: nginx-ingress
+tcp:
+  50001: cloudbees-master/master-jnlp:50001

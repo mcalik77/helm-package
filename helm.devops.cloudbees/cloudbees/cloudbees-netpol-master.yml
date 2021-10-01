@@ -1,0 +1,61 @@
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: deny-all
+  namespace: cloudbees-master
+spec:
+  podSelector: {}
+  ingress: []
+---
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: cloudbees-master
+  namespace: cloudbees-master
+spec:
+  podSelector:
+    matchLabels:
+      com.cloudbees.cje.type: master
+      com.cloudbees.cje.tenant: devops
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          name: cloudbees-master
+      podSelector:
+        matchLabels:
+          app: nginx-ingress
+          app.kubernetes.io/component: controller
+    - namespaceSelector:
+        matchLabels:
+          name: cloudbees-core
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/component: cjoc
+          app.kubernetes.io/instance: cloudbees-core
+    - namespaceSelector:
+        matchLabels:
+          name: cloudbees-master
+      podSelector:
+        matchLabels:
+          jenkins: slave
+    ports:
+      - port: 8080
+        protocol: TCP
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          name: cloudbees-master
+      podSelector:
+        matchLabels:
+          jenkins: slave
+    - namespaceSelector:
+        matchLabels:
+          name: cloudbees-master
+      podSelector:
+        matchLabels:
+          app: nginx-ingress
+          app.kubernetes.io/component: controller
+    ports:
+      - port: 50000
+        protocol: TCP

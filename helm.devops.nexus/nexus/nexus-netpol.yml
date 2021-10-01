@@ -1,0 +1,34 @@
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: deny-all
+  namespace: nexus
+spec:
+  podSelector: {}
+  ingress: []
+---
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: nexus
+  namespace: nexus
+spec:
+  podSelector:
+    matchLabels:
+      app: sonatype-nexus
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          name: nexus
+      podSelector:
+        matchLabels:
+          app: nginx-ingress
+          app.kubernetes.io/component: controller
+    ports:
+      - port: 8081
+        protocol: TCP
+      - port: 5000
+        protocol: TCP
+      - port: 5001
+        protocol: TCP

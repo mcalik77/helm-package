@@ -1,0 +1,23 @@
+rbac:
+  create: true
+controller:
+  ingressClass: sonarqube
+  service:
+    externalTrafficPolicy: Local
+  scope:
+    enabled: true
+    namespace: sonarqube
+  resources:
+    limits:
+      cpu: 100m
+      memory: 128Mi
+defaultBackend:
+  resources:
+    limits:
+      cpu: 10m
+      memory: 20Mi
+podSecurityPolicy:
+  enabled: true
+serviceAccount:
+  create: true
+  name: nginx-ingress

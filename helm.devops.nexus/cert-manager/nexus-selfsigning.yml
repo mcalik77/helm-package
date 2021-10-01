@@ -1,0 +1,23 @@
+apiVersion: cert-manager.io/v1alpha2
+kind: Issuer
+metadata:
+  name: selfsigning-issuer
+  namespace: nexus
+spec:
+  selfSigned: {}
+---
+apiVersion: cert-manager.io/v1alpha2
+kind: Certificate
+metadata:
+  name: nexus-tls
+  namespace: nexus
+spec:
+  secretName: nexus-tls
+  isCA: true
+  issuerRef:
+    name: selfsigning-issuer
+    kind: Issuer
+  commonName: '*.nexus.ddns.net'
+  dnsNames:
+    - nexus.ddns.net
+    - '*nexus.ddns.net'
